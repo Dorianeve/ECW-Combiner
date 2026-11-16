@@ -1,0 +1,3 @@
+* text=auto
+# The hook is a bash script: it must keep LF endings even on Windows checkouts
+.githooks/* text eol=lf

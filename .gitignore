@@ -1,0 +1,23 @@
+# R-related
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+.RDataTmp
+.Renviron
+
+# Local configuration and secrets (never commit)
+config/config.yml
+.sensitive-patterns
+
+# Data and pipeline artefacts (confidential, never commit)
+cache/
+output/
+_targets/
+*.csv
+*.xlsx
+*.rds
+
+# Exceptions: reference lookup tables and synthetic test fixtures
+!reference/*.csv
+!tests/testthat/fixtures/**

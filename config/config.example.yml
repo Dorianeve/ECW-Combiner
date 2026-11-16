@@ -1,0 +1,132 @@
+# Copy this file to config/config.yml and edit. config/config.yml is git-ignored.
+# Secrets (API credentials) do NOT go here: put them in .Renviron (see .Renviron.example).
+
+paths:
+  # Folder holding the source workbooks.
+  #  - Google Drive for Desktop: use "Mirror files" mode, then point to the mounted folder,
+  #    e.g. "G:/My Drive/Grants DB"
+  #  - SharePoint/OneDrive: a fully synced local folder (not just a shortcut)
+  source_dir: "G:/My Drive/Grants DB"
+  reference_dir: "reference"   # PR column lookup tables (pr_columns*.csv, pr_old_new_names.csv)
+  cache_dir: "cache"      # raw extraction cache (re-read only changed files)
+  output_dir: "output"    # all pipeline outputs
+
+source:
+  backend: local          # "local" = any folder on disk (Drive for Desktop, OneDrive, network share)
+  # Regexes matched against file names (case-insensitive), searched recursively.
+  # A file is scanned if it matches ANY of them.
+  file_patterns:
+    results:   "Results template.*\\.xlsx$"
+    programme: "Programme template.*\\.xlsx$"
+    finance:   "Finance template.*\\.xlsx$"
+    aligned:   "Aligned funding template.*\\.xlsx$"
+  # Workbooks whose file NAME matches any of these regexes are ignored (case-insensitive).
+  # Default when omitted: "^ARCHIVED". Use `exclude_patterns: []` to exclude nothing.
+  exclude_patterns:
+    - "^ARCHIVED"
+
+# Excel *table* names to extract from each workbook (logical name: Excel table name).
+# Replace the right-hand side with the table names used in your workbooks.
+tables:
+  children:            "your_children_table"
+  results_framework:   "your_results_framework_table"
+  standard_indicators: "your_standard_indicators_table"
+  reporting_windows:   "your_reporting_windows_table"
+  leverage_funding:    "your_leverage_funding_table"
+  finance_dcm:         "your_finance_dcm_table"
+
+parallel:
+  enabled: true
+  workers: auto           # "auto" or an integer. Capped at 6 when auto.
+
+# Grants management system API. Credentials: set GMS_USER/GMS_PASSWORD in .Renviron
+# (preferred), or set user/password below directly (config.yml is git-ignored too).
+# Env vars take priority if both are set.
+gms:
+  # user: your.name@example.org
+  # password: change-me
+  # Optional: read a saved export instead of calling the API (offline or reproducible runs)
+  from_file: ~
+  base_url: "https://gms.example.org/api"
+  endpoints:
+    grants:       "grants-db/export"
+    allocations:  "allocations-db/export"
+    expenditures: "expenditures_refund-db/export"
+
+# Reporting cycle parameters: change these each year, no code edits needed.
+# Active-year columns (Activein2025), exercise labels ("ARR25 Annual") are derived from `year`.
+reporting:
+  year: 2025
+  window_cutoff_date: "2026-01-01"   # reporting windows ending before this date are used
+  apply_approval_filter: false       # true = keep only M&E-approved reports
+  active_years: [2023, 2024, 2025]   # one ActiveinYYYY flag per year listed
+
+  # How each ActiveinYYYY flag is computed: "Yes" when the grant's dates overlap this period.
+  # {year} is replaced by the flag's year; offsets work: {year-1}, {year+1}.
+  # The values below are the defaults (calendar year); they can be left out.
+  active_in:
+    start: "{year}-01-01"            # fiscal year July-June: start "{year-1}-07-01", end "{year}-06-30"
+    end: "{year}-12-31"
+    lead_rule: true                  # a programme takes the value of its lead grantee
+
+  # ActiveStrategicPlan flag: "Yes" when the grant overlaps start..end
+  strategic_plan:
+    start: "2023-01-01"
+    end: "2025-12-31"
+    include_boundary_end: false      # false = as in the earlier scripts: a grant ending exactly
+                                     # on `start` is NOT active. true = it is.
+
+  # The Annual / Cumulative rows added to the current cycle's data. Defaults shown.
+  # {yy} = last two digits of the year ({yy-1} = previous year).
+  exercises:
+    annual_label: "ARR{yy} Annual"
+    cumulative_label: "ARR{yy} Cumulative"
+    previous_cumulative_label: "ARR{yy-1} Cumulative"   # last cycle's cumulative rows in the previous combiner
+    create: [cumulative, annual]     # which ones to create ("annual", "cumulative" or both)
+    carry_over_inactive: true        # copy last cycle's cumulative rows of grants no longer active
+                                     # into this cycle's cumulative exercise
+    # Optional: which rows belong to an exercise. Without a rule EVERY row does (the earlier
+    # behaviour: ARR25Annual = "Yes" and ARR25Cumulative = "Yes" for all rows). With a rule, a row
+    # belongs to it only if the end date of its programme's latest reporting window lies between
+    # `from` and `to` (either can be left out). A row without a date does not belong to it.
+    # annual_rule:
+    #   from: "{year}-01-01"
+    #   to: "{year}-12-31"
+    # cumulative_rule: ~
+
+filters:
+  # What to do with Global and Regional grants (the Country column):
+  #   legacy  = DEFAULT, same as the old scripts: Global and Regional grants are KEPT; only rows
+  #             with an empty Country are dropped. (The old condition was
+  #             Country != "Global" | Country != "Regional", which is true for every country.)
+  #   exclude = Global and Regional grants are REMOVED (rows with an empty Country are kept).
+  #             This changes the numbers.
+  #   keep    = nothing is removed, not even rows with an empty Country.
+  global_regional: legacy
+
+# Previous-year combiners (CSV), used to build cumulative reporting
+inputs:
+  previous_cr_combiner: "data/previous/cr_combiner.csv"
+  previous_pr_combiner: "data/previous/pr_combiner.csv"
+
+outputs:
+  share_dir: ~     # optional: extra folder (e.g. a shared drive) that receives the XLSX files
+  # Hand-over to the AnnualResultsReport repository. Download both repositories into the same
+  # parent folder; cr_clean.xlsx, pr_clean.xlsx and grants_db.csv are then copied to its
+  # data/input/ folder after every run. Use ~ to switch it off.
+  arr_input_dir: "../AnnualResultsReport/data/input"
+
+# Diagnostics report written on every run to <output_dir>/diagnostics/<timestamp>/ (see docs/diagnostics.md)
+diagnostics:
+  enabled: true
+
+# Checks on the Excel files (see docs/data-quality-checks.md)
+checks:
+  # Template text that sits under a table in every workbook (for example a footer). It is not
+  # data, so it is not reported. Key = name under `tables:`; value = regexes on the first text
+  # of the row. Anything else under a table is still reported.
+  known_text_below_tables:
+    reporting_windows:
+      - "^Please use the link to confirm"
+      - "^Reporting requirements information"
+      - "^AUTO$"

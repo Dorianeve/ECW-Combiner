@@ -1,0 +1,5 @@
+# Copy to .Renviron (git-ignored) and fill in. Restart R afterwards.
+GMS_USER=your.name@example.org
+GMS_PASSWORD=change-me
+# Optional: use a different config file
+# COMBINER_CONFIG=config/config.yml

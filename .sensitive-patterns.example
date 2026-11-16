@@ -1,0 +1,6 @@
+# Copy to .sensitive-patterns (git-ignored). One extended regex per line, matched
+# case-insensitively against every line you are about to commit.
+# Examples (replace with your organisation's real identifiers):
+# your-org-name
+# internal\.example\.org
+# firstname\.lastname

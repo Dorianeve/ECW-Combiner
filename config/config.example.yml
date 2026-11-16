@@ -16,24 +16,24 @@ source:
   # Regexes matched against file names (case-insensitive), searched recursively.
   # A file is scanned if it matches ANY of them.
   file_patterns:
-    results:   "Results template.*\\.xlsx$"
-    programme: "Programme template.*\\.xlsx$"
-    finance:   "Finance template.*\\.xlsx$"
-    aligned:   "Aligned funding template.*\\.xlsx$"
+    results:   "ECW (Results) template.*\\.xlsx$"
+    programme: "ECW (Programme) template.*\\.xlsx$"
+    finance:   "ECW (Finance) template.*\\.xlsx$"
+    aligned:   "ECW (Aligned funding) template.*\\.xlsx$"
   # Workbooks whose file NAME matches any of these regexes are ignored (case-insensitive).
   # Default when omitted: "^ARCHIVED". Use `exclude_patterns: []` to exclude nothing.
   exclude_patterns:
     - "^ARCHIVED"
 
 # Excel *table* names to extract from each workbook (logical name: Excel table name).
-# Replace the right-hand side with the table names used in your workbooks.
+# These are the table names of the ECW templates. Change them only if the templates change.
 tables:
-  children:            "your_children_table"
-  results_framework:   "your_results_framework_table"
-  standard_indicators: "your_standard_indicators_table"
-  reporting_windows:   "your_reporting_windows_table"
-  leverage_funding:    "your_leverage_funding_table"
-  finance_dcm:         "your_finance_dcm_table"
+  children:            "ecw_ar_children"
+  results_framework:   "ecw_ar_results_framework"
+  standard_indicators: "ecw_reporting_standard_indicators"
+  reporting_windows:   "ecw_reporting_windows"
+  leverage_funding:    "ecw_leverage_funding"
+  finance_dcm:         "ecw_finance_dcm"
 
 parallel:
   enabled: true

@@ -5,7 +5,7 @@ Combiner is a tool written in R. It reads many Excel files and makes four clean 
 Every year, grantees send reports in Excel files. Combiner collects the numbers from all these files and puts them together with information from the grants system (the "GMS"). The result is four tables, called **combiners**:
 
 | Combiner | What is inside | What it is used for |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | **CR** | Children targeted and children reached, by education level and gender | Counting children |
 | **PR** | Results of each programme: indicators, targets and values for each reporting period | Tracking results |
 | **AF** | Aligned funding: other money that supports the same work | Funding overview |
@@ -35,7 +35,7 @@ my-folder/
 After every run, Combiner copies three files into `AnnualResultsReport/data/input/`, which is the folder that ARR reads:
 
 | File | What it is |
-|----|----|
+|------------------------------------|------------------------------------|
 | `cr_clean.xlsx` | The CR combiner |
 | `pr_clean.xlsx` | The PR combiner |
 | `grants_db.csv` | The list of grants from the GMS, after the processing for the ARR |
@@ -69,7 +69,7 @@ A longer, step-by-step guide is in [Getting started](docs/getting-started.md).
 ## Where are the results?
 
 | What | Where |
-|----|----|
+|------------------------------------|------------------------------------|
 | The four combiners (CSV and Excel) | `output/cr/`, `output/pr/`, `output/af/`, `output/dcm/` |
 | The grants list for the ARR (`grants_db.csv`) | `output/gms/` |
 | The three files for AnnualResultsReport (`cr_clean.xlsx`, `pr_clean.xlsx`, `grants_db.csv`) | also copied to `../AnnualResultsReport/data/input/` |
@@ -80,7 +80,7 @@ A longer, step-by-step guide is in [Getting started](docs/getting-started.md).
 ## Useful commands
 
 | You want to… | Run this |
-|----|----|
+|------------------------------------|------------------------------------|
 | Run everything | `Rscript scripts/run_pipeline.R` |
 | Run only some combiners | `Rscript scripts/run_pipeline.R cr pr` |
 | Read all Excel files again | `Rscript scripts/run_pipeline.R --refresh` |
@@ -90,7 +90,7 @@ A longer, step-by-step guide is in [Getting started](docs/getting-started.md).
 ## Read more
 
 | Document | Read it to… |
-|----|----|
+|------------------------------------|------------------------------------|
 | [Getting started](docs/getting-started.md) | set up and run Combiner for the first time |
 | [Glossary](docs/glossary.md) | understand the words used in this project |
 | [How it works](docs/architecture.md) | see the steps from Excel files to results |

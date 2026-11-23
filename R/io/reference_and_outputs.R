@@ -12,6 +12,70 @@ load_pr_reference <- function(dir = "reference") {
        names = read_reference("pr_old_new_names", dir))
 }
 
+# Last year's file may be the CSV that the ARR project cleaned for analysis. That cleaning renames a few
+# Combiner columns and adds columns of its own. The names below (old name = Combiner name) and the added
+# columns are put back to what the Combiner makes, so the new combiner is the same whatever the old file holds.
+ARR_RENAMED <- list(
+  cr = c(Grantee = "Granteeorganization", Covid19related = "Covid19relateddata"),
+  pr = c(Grantee = "Granteeorganization", unit = "UnitOfMeasurement", Reportingwindow = "ReportingWindow",
+         code = "AnalysisCode", indicatoradmin = "IndicatorAdmin", Sourceofdata = "SourceOfData"))
+ARR_ADDED <- list(
+  cr = c("date", "yearstart", "yearend", "exercice"),
+  pr = c("exercice", "c19", "Total", "revised_unit", "unit2", "yearend", "yearstart", "monthstart", "monthend",
+         "daystart", "dayend", "concat", "Priority", "level_code", "RW_number"))
+
+#' Give last year's combiner the Combiner's own column names
+#'
+#' Renames the columns that ARR renamed back to the Combiner name, and drops the columns that ARR adds
+#' (the ARR cleaning creates them again). A file that is already a plain Combiner file is not changed.
+#' @param old Last year's combiner (data frame).
+#' @param which "cr" or "pr".
+restore_combiner_names <- function(old, which = c("cr", "pr")) {
+  which <- match.arg(which)
+  ren <- ARR_RENAMED[[which]]
+  todo <- ren[names(ren) %in% names(old) & !ren %in% names(old)]   # only when the Combiner name is free
+  if (length(todo)) names(old)[match(names(todo), names(old))] <- unname(todo)
+  drop <- intersect(ARR_ADDED[[which]], names(old))
+  old <- old[, !names(old) %in% drop, drop = FALSE]
+  if (length(todo) || length(drop)) {
+    message("Previous ", toupper(which), " combiner: ",
+            if (length(todo)) paste0("renamed to the Combiner names: ", paste(names(todo), collapse = ", "), ". "),
+            if (length(drop)) paste0("dropped (the ARR cleaning adds them again): ", paste(drop, collapse = ", "), "."))
+  }
+  old
+}
+
+#' Dates written as `month/day/year` (or `day/month/year`) in last year's CSV become `YYYY-MM-DD`
+#'
+#' A CSV that was opened and saved in Excel has its dates rewritten in the local format, for example
+#' `12/26/2023`. The Combiner writes `2023-12-26`, so the two formats would be mixed in the new
+#' combiner. The order of day and month is decided from the data: a first number above 12 can only be
+#' a day, a second number above 12 can only be a day too. If the data does not decide (or says both),
+#' nothing is changed and a warning says so. Values that are already `YYYY-MM-DD` are not touched.
+#' @param old Last year's combiner (data frame).
+normalise_previous_dates <- function(old) {
+  slash <- "^[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}$"
+  is_slash <- lapply(old, function(x) is.character(x) & !is.na(x) & grepl(slash, trimws(x)))
+  cols <- names(old)[vapply(is_slash, any, logical(1))]
+  if (length(cols) == 0) return(old)
+
+  parts <- do.call(rbind, lapply(cols, function(cn) do.call(rbind, strsplit(trimws(old[[cn]][is_slash[[cn]]]), "/", fixed = TRUE))))
+  first <- as.integer(parts[, 1]); second <- as.integer(parts[, 2])
+  day_first <- any(first > 12); month_first <- any(second > 12)
+  if (day_first == month_first) {
+    warning("Dates like 12/26/2023 were found in the previous combiner (columns: ", paste(cols, collapse = ", "),
+            "), but the order of day and month cannot be decided from the data, so they were not changed.", call. = FALSE)
+    return(old)
+  }
+  fmt <- if (month_first) "%m/%d/%Y" else "%d/%m/%Y"
+  for (cn in cols) {
+    old[[cn]][is_slash[[cn]]] <- format(as.Date(trimws(old[[cn]][is_slash[[cn]]]), fmt), "%Y-%m-%d")
+  }
+  message("Previous combiner: dates written as ", if (month_first) "month/day/year" else "day/month/year",
+          " were changed to YYYY-MM-DD in: ", paste(cols, collapse = ", "), ".")
+  old
+}
+
 #' Read a previous-year combiner (path from `inputs` in the config)
 read_previous_combiner <- function(cfg, which = c("cr", "pr")) {
   which <- match.arg(which)
@@ -20,7 +84,7 @@ read_previous_combiner <- function(cfg, which = c("cr", "pr")) {
     stop("Previous ", toupper(which), " combiner not found: ", path %||% "<not set>",
          "\nSet inputs$previous_", which, "_combiner in the config.", call. = FALSE)
   }
-  utils::read.csv(path, encoding = "UTF-8")
+  normalise_previous_dates(restore_combiner_names(utils::read.csv(path, encoding = "UTF-8"), which))
 }
 
 #' The folder of the AnnualResultsReport repository that receives the hand-over files

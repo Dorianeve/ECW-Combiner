@@ -8,6 +8,7 @@ Use this list every year. Tick each point when it is done.
 
 -   [ ] **Keep last year's results.** You need last year's CR and PR combiners as CSV files.
 -   [ ] **Point to them.** In `config/config.yml`, set `inputs: previous_cr_combiner` and `previous_pr_combiner`.
+-   [ ] **You do not have to clean last year's files by hand.** If last year's CSV was cleaned by the ARR project, Combiner puts the Combiner column names back (for example `Grantee` becomes `Granteeorganization`) and drops the columns that ARR adds (`date`, `yearstart`, `yearend`, `exercice`, and for PR also `Total`, `unit2`, `RW_number` and similar). If the CSV was saved in Excel, dates like `12/26/2023` are changed back to `2023-12-26`. The run log says what was changed.
 -   [ ] **Set the year.** Change `reporting: year` to the new year, for example `2026`. Names like `Activein2026` and `ARR26 Annual` are made from it. Last year's names (`Activein2025`, `ARR25 Cumulative`) are found by Combiner itself.
 -   [ ] **Check the dates.**
     -   `window_cutoff_date`: reports for periods that end before this date are used.

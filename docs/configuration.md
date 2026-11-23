@@ -179,7 +179,7 @@ exercises:
 
 | Setting | What it does |
 |----|----|
-| `previous_cr_combiner` | The path of last year's CR combiner (CSV). |
+| `previous_cr_combiner` | The path of last year's CR combiner (CSV). Combiner restores its own column names and date format in it, so the new combiner is the same even if last year's file was cleaned by ARR or saved in Excel. |
 | `previous_pr_combiner` | The path of last year's PR combiner (CSV). |
 
 ### outputs and safety

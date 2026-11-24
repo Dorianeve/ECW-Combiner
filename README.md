@@ -6,23 +6,23 @@ Every year, grantees send reports in Excel files. Combiner collects the numbers 
 
 | Combiner | What is inside | What it is used for |
 |------------------------|------------------------|------------------------|
-| **CR** | Children targeted and children reached, by education level and gender | Counting children |
+| **CR** | Children targeted and children reached, by education level and gender | Monitoring children reached through program implementation |
 | **PR** | Results of each programme: indicators, targets and values for each reporting period | Tracking results |
 | **AF** | Aligned funding: other money that supports the same work | Funding overview |
 | **DCM** | Money passed on to partners and sub-grantees | Tracking transfers |
 
 ## What Combiner does for you
 
-- It reads every Excel file in a folder. It opens each file only **once**.
-- It works on several files at the same time, so it is fast.
-- It saves what it read. The next run only reads files that are new or changed.
-- It **never changes your Excel files**. It only reads them.
-- After every run it writes a **report** that shows what changed since the last run, so you find problems early.
-- It makes a **list of problems in the Excel files**. You can send this list to the people who filled in the files.
+- It reads every Excel file in a folder. It opens each file only **once** and it extracts the necessary tables at the same stage.
+- It utilizes paralleled threads to speed up the extraction required time.
+- It saves r objects when read. The next run only reads files that are new or changed.
+- It **never changes the GrantsDB Excel files**. It only reads them.
+- After every run it writes a **report** that shows what changed since the last run.
+- It makes a **list of problems in the Excel files**.
 
 ## Works together with AnnualResultsReport
 
-Combiner has a partner project: **AnnualResultsReport** (ARR). It takes the CR and PR combiners, cleans them, checks them and makes the tables for the Annual Results Report.
+Combiner has a partner project: **AnnualResultsReport** (ARR). It takes the CR and PR combiners, cleans them, checks the consistency of the data and makes the tables for the Annual Results Report.
 
 **Download both projects together, into the same parent folder, side by side:**
 
@@ -77,13 +77,13 @@ A longer, step-by-step guide is in [Getting started](docs/getting-started.md).
 | Problems to fix in the Excel files | `output/checks/data_collection_issues.csv` |
 | How long each step took | `output/run_log.csv` |
 
-## Useful commands
+## Useful commands from terminal
 
-| You want to… | Run this |
+| Aim | Run |
 |------------------------------------|------------------------------------|
 | Run everything | `Rscript scripts/run_pipeline.R` |
-| Run only some combiners | `Rscript scripts/run_pipeline.R cr pr` |
-| Read all Excel files again | `Rscript scripts/run_pipeline.R --refresh` |
+| Run only some combiners (specify after .R) | `Rscript scripts/run_pipeline.R cr pr` |
+| Pull the excel files from GrantsDB again | `Rscript scripts/run_pipeline.R --refresh` |
 | Use only the saved data (no Excel files, no login) | `Rscript scripts/run_pipeline.R --cache-only` |
 | Save the GMS data for later use | `Rscript scripts/save_gms.R` |
 
@@ -105,9 +105,8 @@ A longer, step-by-step guide is in [Getting started](docs/getting-started.md).
 
 ## Safety
 
-- **Your Excel files are safe.** Combiner only reads them. It refuses to write anything inside the folder with your Excel files. After each run it also checks that no file in that folder changed.
-- **No data or passwords go to GitHub.** Your settings file, your password file, the saved data and the results are all excluded. A check runs before each commit and stops you if it finds an email address, a personal path, a password or a data file. Turn it on once with `git config core.hooksPath .githooks`.
-- **The tests use made-up data only.**
+- **Excel files are safe.** Combiner only reads them. It refuses to write anything inside the folder with your Excel files. After each run it also checks that no file in that folder changed.
+- **No data or passwords go to GitHub.** Settings file, password file, the saved data and the results are all excluded. A check runs before each commit and stops you if it finds an email address, a personal path, a password or a data file. Turn it on once with `git config core.hooksPath .githooks`.
 
 ## Folders
 

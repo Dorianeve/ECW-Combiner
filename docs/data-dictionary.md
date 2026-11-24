@@ -8,13 +8,13 @@ The column names are written exactly as Combiner writes them. Other tools may de
 
 ## Things that are the same everywhere
 
--   **Yes/No columns** hold the text `Yes` or `No`.
--   **An empty cell** means there is no value.
--   In names like `ARR<yy>`, `<yy>` stands for the last two digits of the year. For 2025 this is `25`. `<year>` stands for the full year.
--   **Exercise** is a label in the CR and PR combiners. It says which report a row belongs to:
-    -   `ARR<yy> Annual` and `ARR<yy> Cumulative` are the rows of the current year. Every row of the current year appears once with each label.
-    -   Rows of earlier years come from last year's combiner, for example `ARR<yy-1> Cumulative`.
-    -   Grants that are no longer active keep their last cumulative rows. They are copied into `ARR<yy> Cumulative`.
+- **Yes/No columns** hold the text `Yes` or `No`.
+- **An empty cell** means there is no value.
+- In names like `ARR<yy>`, `<yy>` stands for the last two digits of the year. For 2025 this is `25`. `<year>` stands for the full year.
+- **Exercise** is a label in the CR and PR combiners. It says which report a row belongs to:
+  - `ARR<yy> Annual` and `ARR<yy> Cumulative` are the rows of the current year. Every row of the current year appears once with each label.
+  - Rows of earlier years come from last year's combiner, for example `ARR<yy-1> Cumulative`.
+  - Grants that are no longer active keep their last cumulative rows. They are copied into `ARR<yy> Cumulative`.
 
 ## Columns that come from the GMS
 
@@ -114,8 +114,8 @@ A few more columns have no real content: `column1`, `kolom1`, `na`, `x1`, `Attri
 
 Two of them are useful to know:
 
--   `reporting_period_up_to` and `report_year` are the end date and the name of the latest reporting window of the programme.
--   `source` says which template the row comes from.
+- `reporting_period_up_to` and `report_year` are the end date and the name of the latest reporting window of the programme.
+- `source` says which template the row comes from.
 
 ## AF: aligned funding (`output/af/`)
 

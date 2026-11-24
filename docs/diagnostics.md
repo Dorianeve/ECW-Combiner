@@ -12,7 +12,7 @@ The newest report is always here:
 
 Every run also has its own folder, named with the date and time:
 
-```
+```         
 output/diagnostics/
   latest/                 a copy of the newest run
   2026-10-12_103000/      one folder for each run
@@ -32,10 +32,10 @@ Combiner compares each run with the **newest earlier run that worked**. To start
 
 Start at the top. The first lines tell you the **status**:
 
--   *Nothing needs attention.* Everything looks as before.
--   *N point(s) need attention.* Read section 1.
--   *1 flow(s) FAILED.* One combiner could not be made. The other combiners were made.
--   *THE RUN FAILED.* Combiner stopped. The report says where and why.
+- *Nothing needs attention.* Everything looks as before.
+- *N point(s) need attention.* Read section 1.
+- *1 flow(s) FAILED.* One combiner could not be made. The other combiners were made.
+- *THE RUN FAILED.* Combiner stopped. The report says where and why.
 
 | Section | What it tells you |
 |----|----|
@@ -66,8 +66,8 @@ Start at the top. The first lines tell you the **status**:
 
 Combiner reports a change in these cases:
 
--   The share of empty cells in a column moves by 10 percentage points or more.
--   A number of rows changes by 10 % or more, and by at least 5 rows.
+- The share of empty cells in a column moves by 10 percentage points or more.
+- A number of rows changes by 10 % or more, and by at least 5 rows.
 
 It compares value by value only in columns with at most 60 different values.
 
@@ -75,16 +75,16 @@ It compares value by value only in columns with at most 60 different values.
 
 Every flow counts its rows after each main step. For example: "after keeping formal and non-formal education" or "after joining the GMS". The report shows the counts in order:
 
-| step | rows | change | last_run |
-|----|----|----|----|
-| CR source: after dropping rows without a GRN | 12,345 | -210 | 12,330 |
-| CR join: after joining the GMS (should not add rows) | 12,345 | +0 | 12,330 |
+| step                                                 | rows   | change | last_run |
+|------------------------------------------------------|--------|--------|----------|
+| CR source: after dropping rows without a GRN         | 12,345 | -210   | 12,330   |
+| CR join: after joining the GMS (should not add rows) | 12,345 | +0     | 12,330   |
 
 How to use it:
 
--   **Find where rows are lost.** A big negative number in `change` shows the step that removed rows.
--   **Find duplicates.** A step marked "should not add rows" must show `+0`. If it shows a plus, a key appears twice in the GMS or in the reporting windows.
--   **Compare with the last run.** The column `last_run` shows the same step in the last run. The report also names the first step where the two runs differ.
+- **Find where rows are lost.** A big negative number in `change` shows the step that removed rows.
+- **Find duplicates.** A step marked "should not add rows" must show `+0`. If it shows a plus, a key appears twice in the GMS or in the reporting windows.
+- **Compare with the last run.** The column `last_run` shows the same step in the last run. The report also names the first step where the two runs differ.
 
 `trace.csv` has the same numbers for all flows.
 
@@ -108,9 +108,9 @@ You can share `report.md`. If someone asks, also share `findings.csv` and `run.l
 
 **What is in them:**
 
--   names of Excel files, columns and tables
--   counts and percentages
--   the values of columns with few different values, but only in lines that report a change (for example a new unit or a new organisation name)
+- names of Excel files, columns and tables
+- counts and percentages
+- the values of columns with few different values, but only in lines that report a change (for example a new unit or a new organisation name)
 
 **What is not in them:** data rows, free-text comments, passwords. Paths are shortened to the last folder.
 
@@ -129,5 +129,5 @@ The report is written only when the results are written. With `--cache-only` it 
 
 ## Limits
 
--   The report counts rows. It tells you **where** rows are lost, not **which** rows. To see which rows, run the step on its own in R.
--   A step is in the trace only if someone placed a trace point there.
+- The report counts rows. It tells you **where** rows are lost, not **which** rows. To see which rows, run the step on its own in R.
+- A step is in the trace only if someone placed a trace point there.

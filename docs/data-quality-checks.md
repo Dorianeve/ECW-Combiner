@@ -4,8 +4,7 @@ Some problems cannot be fixed by Combiner. They are inside the Excel files, and 
 
 **The list is here:** `output/checks/data_collection_issues.csv`
 
-Combiner also prints one line when it finishes, for example:
-`Data-collection checks: 4 issue(s) in 1 workbook(s)`.
+Combiner also prints one line when it finishes, for example: `Data-collection checks: 4 issue(s) in 1 workbook(s)`.
 
 If the list is empty, Combiner found no problems.
 
@@ -19,7 +18,7 @@ If the list is empty, Combiner found no problems.
 ## The columns of the list
 
 | Column | What it means |
-|----|----|
+|------------------------------------|------------------------------------|
 | `file` | The Excel file that has the problem |
 | `table` | The table in that file (or the combiner, for the second problem below) |
 | `issue` | The kind of problem |
@@ -63,11 +62,11 @@ Everything else under the table is still reported. After you change this list yo
 
 **How to fix it.**
 
--   Fill in the grant reference (the "grid" cell) in the Excel file.
--   If the reference is correct, check that the grant exists in the GMS.
+- Fill in the grant reference (the "grid" cell) in the Excel file. This is result of a formula, check it if it broke.
+- If the reference is correct, check that the grant exists in the GMS.
 
 ## Good to know
 
--   Combiner looks for rows under tables when it **reads** a file. Files that were saved in the cache before this check existed are reported as "not checked". Run once with `--refresh` to check all files.
--   With `--cache-only`, the list shows what Combiner found when it last read the files.
--   Combiner never changes Excel files. The people who own the files fix them.
+- Combiner looks for rows under tables when it **reads** a file. Files that were saved in the cache before this check existed are reported as "not checked". Run once with `--refresh` to check all files.
+- With `--cache-only`, the list shows what Combiner found when it last read the files.
+- Combiner never changes Excel files. The people who own the files fix them.

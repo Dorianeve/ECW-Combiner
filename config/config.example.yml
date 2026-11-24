@@ -11,6 +11,14 @@ paths:
   cache_dir: "cache"      # raw extraction cache (re-read only changed files)
   output_dir: "output"    # all pipeline outputs
 
+# Optional, Google Drive only: pulls workbooks out of Drive via its API before the pipeline
+# runs, converting Google Sheets to real .xlsx files on the way (scripts/00_drive_export.R,
+# see docs/google-drive.md). Not needed if every source file is already a real .xlsx, or if you
+# only use Google Drive for Desktop mirroring.
+drive_export:
+  folder_id: ~            # the Drive folder to read, e.g. "1AbCdEfGhIjKlMnOpQrStUvWxYz" from its URL
+  dest_dir: "cache/drive_export"   # exported files land here; point paths: source_dir at it
+
 source:
   backend: local          # "local" = any folder on disk (Drive for Desktop, OneDrive, network share)
   # Regexes matched against file names (case-insensitive), searched recursively.

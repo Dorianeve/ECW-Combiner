@@ -18,6 +18,8 @@ _targets/
 *.xlsx
 *.rds
 
-# Exceptions: reference lookup tables and synthetic test fixtures
-!reference/*.csv
+# Exceptions: PR combiner lookup tables (cleaning specifics, not confidential data) and synthetic test fixtures
+!reference/pr_columns.csv
+!reference/pr_columns_order.csv
+!reference/pr_old_new_names.csv
 !tests/testthat/fixtures/**

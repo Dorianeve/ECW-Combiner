@@ -40,6 +40,15 @@ You can also write `user` and `password` under `gms:` in `config.yml`. If both e
 
 A path without a drive letter, like `"output"`, starts from the folder where you run the command.
 
+### drive_export: optional Google Drive export (before `source`)
+
+| Setting | What it does |
+|----|----|
+| `folder_id` | The Drive folder to export workbooks from. Leave `~` unless you use `scripts/00_drive_export.R`. |
+| `dest_dir` | Where the exported files land. Default `cache/drive_export`. |
+
+See [Google Drive](google-drive.md) for when and how to use this.
+
 ### source: which Excel files to use
 
 | Setting | What it does |
